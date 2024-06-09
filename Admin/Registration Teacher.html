@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Teacher</title>
+    <link rel="stylesheet" href="css/registration.css">
+    <link rel="stylesheet" href="css/side-panel.css">
+</head>
+<body>
+  
+  <div class="container">
+    <div class="side-panel">
+      <h2>Admin UMBB</h2>
+      <ul>
+        <li><a href="Registration Teacher.html">Registration Teacher</a></li>
+        <li><a href="Registration Student.html">Registration Student</a></li>
+        <li><a href="teacher-list.html">List of Teachers</a></li>
+        <li><a href="student-list.html">List of Students</a></li>
+        <li><a href="ScheduleManagement.html">Schedule Management</a></li>
+        <li><a href="Dashboard.html">Dashboard</a></li>
+        <li><a href="AdminSendNotification.html">Send Notification</a></li>
+        <li><a href="AdminReceiveNotification.html">Receive Notification</a></li>
+        <li><a href="#" id="logout">Logout</a></li>
+      </ul>
+    </div>
+    <div class="content">
+      <form action="#" method="post" id="contact_form">
+        <fieldset>
+          <legend><h2>Create Teacher Account</h2></legend>
+        
+          <div class="form-group">
+            <label>First Name</label>
+            <input name="first_name" placeholder="First Name" type="text">
+          </div>
+      
+          <div class="form-group">
+            <label>Last Name</label>
+            <input name="last_name" placeholder="Last Name" type="text">
+          </div>
+      
+          <div class="form-group">
+            <label>Department / Office</label>
+            <select name="department">
+              <option value="">Select Department</option>
+              <option>Department of Agronomy</option>
+              <option>Department of Biology</option>
+              <option>Department of Chemistry</option>
+              <option>Department of IT</option>
+              <option>Department of Mathematics</option>
+              <option>Department of Physics</option>
+              <option>Department of Sciences and Techniques of Physical and Sports Activities</option>
+            </select>
+          </div>
+      
+          <div class="form-group">
+            <label>Password</label>
+            <input name="user_password" placeholder="Password" type="password">
+          </div>
+      
+          <div class="form-group">
+            <label>E-Mail</label>
+            <input name="email" placeholder="E-Mail Address" type="text">
+          </div>
+      
+          <div class="form-group">
+            <button type="submit" class="btn">SUBMIT</button>
+          </div>
+      
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+<script>
+document.getElementById("logout").addEventListener("click", function(event) {
+    event.preventDefault();
+    
+    // Redirect back to admin.html
+    window.location.href = "admin.html";
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Management</title>
+    <link rel="stylesheet" href="../css/Attendance.css">
+    <link rel="stylesheet" href="../css/side-panel.css">
+</head>
+<body>
+    <nav class="side-panel" aria-label="Main navigation">
+        <h2>Teacher UMBB</h2>
+        <li><a href="profEmp.html" id="logout">Timetable</a></li>
+            <li><a href="Attendance.html" id="logout">Attendance</a></li>
+            <li><a href="TeacherSendNotification.html" id="logout">Send Notification</a></li>
+            <li><a href="TeacherReceiveNotification.html" id="logout">Receive Notification</a></li>
+            <li><a href="#" id="logout">Logout</a></li>
+    </nav>
+
+    <main class="content">
+        <section class="group-selection">
+            <h2>Select a Group</h2>
+            <div class="group-buttons">
+                <button class="btn" onclick="showGroupData('group1')">Group 1</button>
+                <button class="btn" onclick="showGroupData('group2')">Group 2</button>
+            </div>
+        </section>
+
+        <section class="attendance-section">
+            <h2>Attendance</h2>
+            <table id="attendance-table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Matricule</th>
+                    </tr>
+                </thead>
+                <tbody id="attendance-body">
+                    <!-- Attendance data will be populated here -->
+                </tbody>
+            </table>
+        </section>
+
+        <section class="absence-section">
+            <h2>Absence</h2>
+            <table id="absence-table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Matricule</th>
+                        <th>Justification</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="absence-body">
+                    <!-- Absence data will be populated here -->
+                </tbody>
+            </table>
+        </section>
+        <!-- Button to Print Data to a Text File -->
+        <section class="print-section">
+            <button class="btn" onclick="printGroupData()">Print Group Data</button>
+        </section>
+    </main>
+
+    <script src="js/Attendance.js"></script>
+    <script src="js/printGroupData.js"></script>
+</body>
+</html>

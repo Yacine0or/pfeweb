@@ -1,0 +1,39 @@
+
+.content {
+  flex: 1;
+  padding: 20px;
+  background-color: white;
+  margin-left: 260px;
+}
+
+.side-panel {
+  height: 100%;
+  width: 250px; /* Adjust the width as needed */
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #f4f4f4;
+  padding-top: 20px;
+  padding: 10px;
+}
+
+.side-panel ul {
+  list-style: none;
+}
+
+.side-panel ul li {
+  margin-bottom: 10px;
+}
+
+.side-panel ul li a {
+  display: block;
+  padding: 10px;
+  background-color: #ddd;
+  text-decoration: none;
+  color: #333;
+}
+
+.side-panel ul li a:hover {
+  background-color: #ccc;
+}
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Students</title>
+    <link rel="stylesheet" href="css/list.css"> <!-- Custom CSS for styling -->
+    <link rel="stylesheet" href="css/side-panel.css"> <!-- Custom CSS for side panel -->
+</head>
+<body>
+  
+  <div class="container">
+    <div class="side-panel">
+      <h2>Admin UMBB</h2>
+      <ul>
+        <li><a href="Registration Teacher.html">Registration Teacher</a></li>
+        <li><a href="Registration Student.html">Registration Student</a></li>
+        <li><a href="teacher-list.html">List of Teachers</a></li>
+        <li><a href="student-list.html">List of Students</a></li>
+        <li><a href="ScheduleManagement.html">Schedule Management</a></li>
+        <li><a href="Dashboard.html">Dashboard</a></li>
+        <li><a href="AdminSendNotification.html">Send Notification</a></li>
+        <li><a href="AdminReceiveNotification.html">Receive Notification</a></li>
+        <li><a href="#" id="logout">Logout</a></li>
+      </ul>
+    </div>
+    <div class="content">
+      <h2>List of Students</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Class</th>
+            <th>Matricule</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Example -->
+          <tr>
+            <td>Alice</td>
+            <td>Johnson</td>
+            <td>SI 02</td>
+            <td>202012345678</td>
+            <td><button class="remove-btn" data-student-id="1">Remove</button></td>
+          </tr>
+          <tr>
+            <td>Bob</td>
+            <td>Smith</td>
+            <td>INFO 11</td>
+            <td>232331313131</td>
+            <td><button class="remove-btn" data-student-id="2">Remove</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>

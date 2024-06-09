@@ -1,0 +1,78 @@
+/* login.css */
+
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.content {
+    margin-top: 50px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 0 20px; /* Add some padding to the sides */
+}
+
+.row {
+    display: flex;
+    align-items: center;
+}
+
+.img-fluid {
+    max-width: 100%;
+}
+
+.contents {
+    padding: 30px;
+    /* White background */
+    border-radius: 10px; /* Increase border radius */
+     /* Add a subtle shadow */
+    width: 80%; /* Set the width to 80% */
+    margin: 0 auto; /* Center the contents horizontally */
+}
+
+.form-group {
+    margin-bottom: 30px; /* Increase margin bottom */
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #333333; /* Darken label color */
+}
+
+.form-control {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ced4da; /* Lighter border color */
+    border-radius: 8px; /* Increase border radius */
+    transition: border-color 0.3s ease; /* Smooth transition */
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #8bc819; /* Highlight border color on focus */
+}
+
+.btn-login {
+    width: 100%;
+    padding: 15px;
+    background-color: #8bc819;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.btn-login:hover {
+    background-color: #6a9618;
+}
