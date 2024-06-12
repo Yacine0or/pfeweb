@@ -55,8 +55,8 @@
 
             <label for="courseRoom">Room:</label>
             <input type="text" id="courseRoom" name="courseRoom" class="courseRoom">
-
-            <button type="button" onclick="addCourse()" class="add-course-button">Add Course</button>
+            <input type="hidden" id="daySelected" name="daySelected">
+            <button type="submit" class="add-course-button">Add Course</button>
         </form>
 
         <!-- Display existing courses here -->
@@ -65,8 +65,7 @@
     </div>
 </div>
 
-    <script src="../js/profEmp.js"></script>
-    <script src="../js/bundle.js"></script>
+    <script src="../js/profEmp.js" type="module"></script>
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 </body>
 </html>

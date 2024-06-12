@@ -1,3 +1,4 @@
+
 let currentGroup = '';
 // Simulated data for groups with justification details
 const groupData = {

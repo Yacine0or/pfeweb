@@ -1,6 +1,7 @@
+import { db, collection, getDocs, setDoc, doc } from './../../js/firebase.js';
+
 // Constants
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const coursesByDay = {};
 
 // DOM References
 const todayLabel = document.getElementById('todayLabel');
@@ -12,6 +13,7 @@ const scheduleHeading = document.getElementById('scheduleHeading');
 // Initialization
 updateDate();
 generateDays();
+fetchCourses();
 
 // Functions
 
@@ -47,50 +49,77 @@ function selectDay(button) {
     dayButtons.forEach(btn => btn.classList.remove('clicked'));
     button.classList.add('clicked');
     const dayName = button.dataset.day;
+    
+    const daySelectedInput = document.querySelector('#daySelected');
+    daySelectedInput.value = dayName;
+
     displaySchedule(dayName);
 }
 
-// Add a course
-function addCourse() {
-    const form = document.getElementById('courseForm');
+// Collection reference
+const colRefSe = collection(db, 'séances');
+
+// Generate a random hexadecimal ID with length 10
+function generateRandomId(length = 10) {
+    const characters = '0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += characters[Math.floor(Math.random() * characters.length)];
+    }
+    return result;
+}
+
+async function addCourse() {
+    const form = document.querySelector('#courseForm');
     const formData = new FormData(form);
 
-    const daySelected = document.querySelector('.day.clicked');
-    if (!daySelected) {
-        alert("Please select a day.");
-        return;
-    }
-
-    const dayName = daySelected.dataset.day;
-    const courseTime = formData.get('timeC');
-    const course = {
-        time: courseTime,
+    const courseData = {
+        id: generateRandomId(),
+        day: formData.get('daySelected'),
+        time: formData.get('timeC'),
         name: formData.get('courseName'),
         type: formData.get('courseType'),
-        room: formData.get('courseRoom'),
         branch: formData.get('courseBranch'),
-        group: formData.get('courseGroup')
+        group: formData.get('courseGroup'),
+        room: formData.get('courseRoom'),
     };
 
-    if (!coursesByDay[dayName]) {
-        coursesByDay[dayName] = [];
+    try {
+        await setDoc(doc(colRefSe, courseData.id), courseData, { merge: false });
+        console.log("Course added to Firestore");
+        
+        form.reset();
+        await fetchCourses(); // Refresh courses after adding a new one
+    } catch (error) {
+        console.error("Error adding course to Firestore: ", error);
     }
-
-    const existingCourseIndex = coursesByDay[dayName].findIndex(c => c.time === courseTime);
-    if (existingCourseIndex !== -1) {
-        coursesByDay[dayName][existingCourseIndex] = course;
-    } else {
-        coursesByDay[dayName].push(course);
-    }
-
-    coursesByDay[dayName].sort((a, b) => (a.time > b.time) ? 1 : -1);
-
-    displaySchedule(dayName);
-    form.reset();
-    scheduleHeading.textContent = '';
 }
 
-// Display schedule for a specific day
+document.querySelector('#courseForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    addCourse();
+});
+
+const coursesByDay = {};
+
+async function fetchCourses() {
+    const querySnapshot = await getDocs(collection(db, 'séances'));
+    querySnapshot.forEach((doc) => {
+        const course = doc.data();
+        const dayName = course.day;
+        if (!coursesByDay[dayName]) {
+            coursesByDay[dayName] = [];
+        }
+        coursesByDay[dayName].push(course);
+    });
+
+    // Display the schedule for the currently selected day
+    const selectedDay = document.querySelector('.day.clicked')?.dataset.day;
+    if (selectedDay) {
+        displaySchedule(selectedDay);
+    }
+}
+
 function displaySchedule(dayName) {
     scheduleContainer.innerHTML = ''; // Clear previous schedule
 
@@ -110,9 +139,9 @@ function displaySchedule(dayName) {
             <th>Branch</th>
             <th>Group</th>
             <th>Room</th>
-            ${dayName === daysOfWeek[new Date().getDay()] ? // Check if it's today
-        '<th>QR Code</th>'
-        : ''} <!-- Add QR Code column header only for today -->
+            ${dayName === daysOfWeek[new Date().getDay()] ?
+            '<th>QR Code</th>'
+            : ''} <!-- Add QR Code column header only for today -->
         </tr>`;
     dayCourses.forEach(course => {
         const row = document.createElement('tr');
@@ -123,23 +152,37 @@ function displaySchedule(dayName) {
             <td>${course.branch}</td>
             <td>${course.group}</td>
             <td>${course.room}</td>
-            ${dayName === daysOfWeek[new Date().getDay()] ? // Check if it's today
-        `<td>
-                    <div id="qrCode_${course.time.replace(':', '-')}" class="qr-code"></div> <!-- Empty div for QR code -->
-                    <button class="generate-qr-button" onclick="generateQRCode('${dayName}', '${course.time}', '${course.name}', '${course.type}', '${course.branch}', '${course.group}', '${course.room}')">Generate QR</button>
-                </td>`
-        : ''}`; // Add QR code button and empty div for QR code only for today
+            ${dayName === daysOfWeek[new Date().getDay()] ? 
+            `<td>
+                <div id="qrCode_${course.time.replace(':', '-')}" class="qr-code"></div> <!-- Empty div for QR code -->
+                <button class="generate-qr-button" data-day="${dayName}" data-time="${course.time}" data-name="${course.name}" data-type="${course.type}" data-branch="${course.branch}" data-group="${course.group}" data-room="${course.room}">Generate QR</button>
+            </td>`
+            : ''}`; 
         table.appendChild(row);
     });
-    daySchedule.appendChild(table);
+    daySchedule.appendChild(table); 
     scheduleContainer.appendChild(daySchedule);
+
+    // Attach event listeners for the QR code buttons
+    const qrButtons = document.querySelectorAll('.generate-qr-button');
+    qrButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const dayName = button.dataset.day;
+            const time = button.dataset.time;
+            const name = button.dataset.name;
+            const type = button.dataset.type;
+            const branch = button.dataset.branch;
+            const group = button.dataset.group;
+            const room = button.dataset.room;
+            generateQRCode(dayName, time, name, type, branch, group, room);
+        });
+    });
 }
 
 // Generate QR code
-// Function to generate QR code
 function generateQRCode(dayName, time, name, type, branch, group, room) {
     const hexString = toHexString(dayName, time, name, type, branch, group, room);
-    const stringHex= fromHexString(hexString);
+    const stringHex = fromHexString(hexString);
     console.log("Hexadecimal String:", hexString); 
     console.log("String Hexadecimal:", stringHex); 
     const qrCodeDivId = `qrCode_${time.replace(':', '-')}`;
@@ -176,7 +219,6 @@ function generateQRCode(dayName, time, name, type, branch, group, room) {
     qrCodeDiv.appendChild(containerDiv);
 }
 
-
 function toHexString(dayName, time, name, type, branch, group, room) {
     const dataString = `${dayName}|${time}|${name}|${type}|${branch}|${group}|${room}`;
     let hexString = '';
@@ -193,60 +235,6 @@ function fromHexString(hexString) {
     }
     return dataString;
 }
-
-// Function to generate a random code
-function generateRandomCode() {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const length = 10;
-    let result = '';
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-}
-
-// function generateQRCode(dayName, time, name, type, branch, group, room) {
-//     const data = {
-//         dayName: dayName,
-//         time: time,
-//         name: name,
-//         type: type,
-//         branch: branch,
-//         group: group,
-//         room: room
-//     };
-//     const dataString = JSON.stringify(data);
-
-//     const qrCodeDivId = `qrCode_${time.replace(':', '-')}`;
-//     const qrCodeDiv = document.getElementById(qrCodeDivId);
-//     qrCodeDiv.innerHTML = ''; 
-
-//     const containerDiv = document.createElement('div');
-//     containerDiv.classList.add('qr-container');
-
-//     const qr = new QRCode(containerDiv, {
-//         text: dataString,
-//         width: 250, 
-//         height: 250, 
-//         colorDark: "#000000",
-//         colorLight: "#ffffff",
-//         correctLevel: QRCode.CorrectLevel.H
-//     });
-
-//     qrCodeDiv.appendChild(containerDiv);
-
-//     const exitButton = document.createElement('button');
-//     exitButton.textContent = 'Exit';
-//     exitButton.classList.add('exit-button');
-//     exitButton.addEventListener('click', function () {
-//         qrCodeDiv.innerHTML = ''; 
-//     });
-
-//     containerDiv.appendChild(exitButton);
-//     qrCodeDiv.appendChild(containerDiv);
-// }
-
-
 
 // Get the time rank
 function getTimeRank(time) {
