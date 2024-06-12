@@ -19,15 +19,4 @@ const app = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
 
-
-
-// const docRef = doc(db, "groups", "Si1");
-// const docSnap = await getDoc(docRef);
-// if (docSnap.exists()) {
-//   console.log("Document data:", docSnap.data());
-// } else {
-//   // docSnap.data() will be undefined in this case
-//   console.log("No such document!");
-// }
-
 export { db, collection, getDocs, setDoc, doc  };

@@ -82,6 +82,7 @@ async function addCourse() {
         branch: formData.get('courseBranch'),
         group: formData.get('courseGroup'),
         room: formData.get('courseRoom'),
+        qr: toHexString(formData.get('daySelected'), formData.get('timeC'), formData.get('courseName'), formData.get('courseType'),formData.get('courseBranch'), formData.get('courseGroup'), formData.get('courseRoom')),
     };
 
     try {
