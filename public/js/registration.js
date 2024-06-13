@@ -1,8 +1,21 @@
-import { collection, db, doc, getDocs, setDoc } from './../../js/firebase.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+import { collection, doc, getDocs, getFirestore, setDoc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
-const teacherTable = document.getElementById('teacherTable');
-const studentTable = document.getElementById('studentTable');
+const firebaseConfig = {
+  apiKey: "AIzaSyCDkt1cjZcdIgC0CW8Ysbdu5YWQuaIOYR8",
+  authDomain: "flutterfirebase-d1c32.firebaseapp.com",
+  projectId: "flutterfirebase-d1c32",
+  storageBucket: "flutterfirebase-d1c32.appspot.com",
+  messagingSenderId: "596243185568",
+  appId: "1:596243185568:web:017ee2a632219c06b3aec5",
+  measurementId: "G-Q5HTZWQFS3"
+};
 
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
 // Collection reference
 const colRefEt = collection(db, 'étudiants');
 const colRefEn = collection(db, 'enseignants');
@@ -83,52 +96,63 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const teacherTable = document.querySelector('#teacherTable tbody');
 
+    if (teacherTable) {
+        async function fetchTeachers() {
+            try {
+                const querySnapshot = await getDocs(collection(db, 'enseignants'));
+                querySnapshot.forEach((doc) => {
+                    const teacher = doc.data();
+                    console.log("Teacher:", teacher);
 
-async function fetchTeachers() {
-    try {
-        const querySnapshot = await getDocs(collection(db, 'enseignants'));
-        querySnapshot.forEach((doc) => {
-            const teacher = doc.data();
-            console.log("Teacher:", teacher);
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${teacher.prenom_enseignant}</td>
+                        <td>${teacher.nom_enseignant}</td>
+                        <td>${teacher.departement}</td>
+                        <td>${teacher.email_enseignant}</td>
+                        <td><button class="remove-btn" data-teacher-id="${teacher.id}">Remove</button></td>
+                    `;
+                    teacherTable.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Error fetching teachers:", error);
+            }
+        }
 
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${teacher.prenom_enseignant}</td>
-                <td>${teacher.nom_enseignant}</td>
-                <td>${teacher.departement}</td>
-                <td>${teacher.email_enseignant}</td>
-                <td><button class="remove-btn" data-teacher-id="${teacher.id}">Remove</button></td>
-            `;
-            teacherTable.appendChild(row);
-        });
-    } catch (error) {
-        console.error("Error fetching teachers:", error);
+        fetchTeachers();
     }
-}
+});
 
-fetchTeachers();
+document.addEventListener('DOMContentLoaded', () => {
+    const studentTable = document.querySelector('#studentTable tbody');
 
-async function fetchStudents() {
-    try {
-        const querySnapshot = await getDocs(collection(db, 'étudiants'));
-        querySnapshot.forEach((doc) => {
-            const student = doc.data();
-            console.log("Student:", student);
+    if (studentTable) {
+        async function fetchStudents() {
+            try {
+                const querySnapshot = await getDocs(collection(db, 'étudiants'));
+                querySnapshot.forEach((doc) => {
+                    const student = doc.data();
+                    console.log("Student:", student);
 
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${student.prenom_etudiant}</td>
-                <td>${student.nom_etudiant}</td>
-                <td></td>
-                <td>${student.mat_etudiant}</td>
-                <td><button class="remove-btn" data-student-id="${student.id}">Remove</button></td>
-            `;
-            studentTable.appendChild(row);
-        });
-    } catch (error) {
-        console.error("Error fetching students:", error);
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${student.prenom_etudiant}</td>
+                        <td>${student.nom_etudiant}</td>
+                        <td>${student.mat_etudiant}</td>
+                        <td>${student.email_etudiant}</td>
+                        <td><button class="remove-btn" data-student-id="${student.id}">Remove</button></td>
+                    `;
+                    studentTable.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Error fetching students:", error);
+            }
+        }
+
+        fetchStudents();
     }
-}
+});
 
-fetchStudents();

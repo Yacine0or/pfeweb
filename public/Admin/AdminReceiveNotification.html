@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receive Notification</title>
-    <link rel="stylesheet" href="../css/profEmp.css">
+    
+    <link rel="stylesheet" href="../css/sendnotification.css">
     <link rel="stylesheet" href="../css/side-panel.css">
 </head>
 <body>
     <div class="side-panel">
-        <h2>ADmin UMBB</h2>
+        <h2>Admin UMBB</h2>
         <ul>
             <li><a href="Registration Teacher.html">Registration Teacher</a></li>
             <li><a href="Registration Student.html">Registration Student</a></li>
@@ -28,38 +29,10 @@
         <p>Below are the notifications from administration and students.</p>
 
         <!-- List of notifications -->
-        <div class="notification-list" id="notification-list">
-            <!-- Notifications will be added here by JavaScript -->
+        <div class="notification-list" id="notification-list-admin">
             <p>No notifications yet.</p>
         </div>
     </div>
-    <script>
-      const notifications = [
-            { source: 'Teacher', message: 'Request for additional resources.', timestamp: '2024-05-01 10:00:00' },
-            { source: 'Student', message: 'Question about school policies.', timestamp: '2024-05-01 11:00:00' },
-            { source: 'Teacher', message: 'Schedule adjustment request.', timestamp: '2024-05-01 12:00:00' },
-            { source: 'Student', message: 'Can I join an extracurricular activity?', timestamp: '2024-05-01 13:00:00' },
-        ];
-
-      const notificationList = document.getElementById('notification-list');
-
-      // Clear any existing content
-      notificationList.innerHTML = '';
-
-      if (notifications.length > 0) {
-          notifications.forEach((notification) => {
-              const notificationDiv = document.createElement('div');
-              notificationDiv.className = 'notification';
-              notificationDiv.innerHTML = `
-                  <strong>From:</strong> ${notification.source}<br>
-                  <strong>Message:</strong> ${notification.message}<br>
-                  <strong>Time:</strong> ${notification.timestamp}
-              `;
-              notificationList.appendChild(notificationDiv);
-          });
-      } else {
-          notificationList.innerHTML = '<p>No notifications yet.</p>';
-      }
-  </script>
+    <script src="../js/sendnotification.js" type="module"></script>
 </body>
 </html>

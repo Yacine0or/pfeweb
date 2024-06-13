@@ -24,38 +24,11 @@
         <p>Below are the notifications from administration and students.</p>
 
         <!-- List of notifications -->
-        <div class="notification-list" id="notification-list">
+        <div class="notification-list" id="notification-list-teacher">
             <!-- Notifications will be added here by JavaScript -->
             <p>No notifications yet.</p>
         </div>
     </div>
-    <script>
-      const notifications = [
-          { source: 'Administration', message: 'Staff meeting on Friday at 2 PM.', timestamp: '2024-05-01 08:00:00' },
-          { source: 'Student', message: 'Can I get extra help with the math homework?', timestamp: '2024-05-01 09:00:00' },
-          { source: 'Administration', message: 'New school policies.', timestamp: '2024-05-01 10:00:00' },
-          { source: 'Student', message: 'Will there be a test tomorrow?', timestamp: '2024-05-01 11:00:00' },
-      ];
-
-      const notificationList = document.getElementById('notification-list');
-
-      // Clear any existing content
-      notificationList.innerHTML = '';
-
-      if (notifications.length > 0) {
-          notifications.forEach((notification) => {
-              const notificationDiv = document.createElement('div');
-              notificationDiv.className = 'notification';
-              notificationDiv.innerHTML = `
-                  <strong>From:</strong> ${notification.source}<br>
-                  <strong>Message:</strong> ${notification.message}<br>
-                  <strong>Time:</strong> ${notification.timestamp}
-              `;
-              notificationList.appendChild(notificationDiv);
-          });
-      } else {
-          notificationList.innerHTML = '<p>No notifications yet.</p>';
-      }
-  </script>
+    <script src="../js/sendnotification.js" type="module"></script>
 </body>
 </html>

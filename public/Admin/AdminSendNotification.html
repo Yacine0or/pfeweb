@@ -31,7 +31,7 @@
         <p>Use the form below to send a notification to teachers or students.</p>
     
         <!-- Notification Form -->
-        <form id="notification-form" class="notification-form">
+        <form id="notification-form-admin" class="notification-form">
             <label for="recipient">Recipient:</label>
             <select id="recipient" name="recipient">
                 <option value="students">Students</option>
@@ -46,12 +46,12 @@
         </form>
     
         <!-- Display Sent Notifications -->
-        <div class="sent-notifications" id="sent-notifications">
+        <div class="sent-notifications" id="sent-notifications-admin">
             <h3>Sent Notifications</h3>
             <p>No notifications sent yet.</p>
         </div>
     </div>
   </div>
-<script src="../js/sendnotification.js"></script>
+<script src="../js/sendnotification.js" type="module"></script>
 </body>
 </html>
