@@ -1,12 +1,4 @@
-body, h1, h2, h3, p, ul, ol, li {
-    margin: 0;
-    padding: 0;
-}
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0; /* Added to ensure no default margin on body */
-}
+
 .container legend {
     font-size: 24px;
     text-align: center;
@@ -14,7 +6,11 @@ body {
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+}
+
+#addTeacher , #addStudent{
+margin-right:200px;
 }
 
 .control-label {
@@ -38,7 +34,7 @@ input[type="password"]:focus {
 }
 
 select {
-    width: calc(100% - 20px);
+    width: calc(100% - 40px);
     height: 40px;
     padding: 0 10px;
     border-radius: 4px;

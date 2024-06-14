@@ -47,8 +47,7 @@ h2 {
 }
 
 .form button:hover {
-    background-color: #6a9618
-         kkxckkdfcvkjvjfj; /* Darker green on hover */
+    background-color: #6a9618; /* Darker green on hover */
 }
 
 .schedule {
@@ -68,7 +67,7 @@ h2 {
 }
 
 .schedule th {
-    background-color: #f2f2f2;
+    background-color: #8bc819;
 }
 
 .schedule button {
@@ -80,4 +79,7 @@ h2 {
 
 .schedule button:hover {
     background-color: #d32f2f; /* Darker red on hover */
+}
+#addCourseButton{
+    width:20%;
 }

@@ -3,9 +3,11 @@
   flex: 1;
   padding: 20px;
   background-color: white;
-  margin-left: 260px;
 }
 
+.card{
+  margin-left:240px;
+}
 .side-panel {
   height: 100%;
   width: 250px; /* Adjust the width as needed */

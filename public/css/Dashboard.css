@@ -1,52 +1,26 @@
-body {
+body #dashboard {
     font-family: Arial, sans-serif;
     line-height: 1.6;
 }
-* {
-    margin: 0;
-    padding: 0;    
-}
 
-.content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
 
 /* Dashboard Title */
-h1 {
-    text-align: center;
+#dashboard h1 {
     font-size: 32px;
     color: #333;
     margin-bottom: 20px;
 }
 
+
 /* General Section Styles */
-section {
+#dashboard section {
     margin-bottom: 40px;
 }
 
-.row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
 
-.col-md-4 {
-    flex: 0 0 32%; /* Approx. one-third width */
-}
-
-.col-md-6 {
-    flex: 0 0 48%; /* Approx. half width */
-}
-
-/* Center Text Alignment */
-.text-center {
-    text-align: center;
-}
 
 /* Circular Progress Indicators */
-.circle {
+#dashboard .circle {
     position: relative;
     display: inline-block;
     width: 100px;
@@ -58,7 +32,7 @@ section {
     );
 }
 
-.circle::before {
+#dashboard .circle::before {
     content: attr(data-percentage);
     position: absolute;
     top: 50%;
@@ -69,13 +43,13 @@ section {
     color: #000;
 }
 
-.circle-label {
+#dashboard .circle-label {
     text-align: center;
     font-size: 16px;
     color: #555;
 }
 
-.card {
+#dashboard .card1 {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -83,18 +57,18 @@ section {
     overflow: hidden;
 }
 
-.card-body {
+#dashboard .card-body {
     text-align: center;
     padding: 20px;
 }
 
-.card h5 {
+#dashboard .card1 h5 {
     font-size: 20px;
     color: #333;
     margin-bottom: 10px;
 }
 
-.card p {
+#dashboard .card1 p {
     font-size: 18px;
     color: #555;
 }

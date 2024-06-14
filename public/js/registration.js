@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-import { collection, doc, getDocs, getFirestore, setDoc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+import { collection, doc, getDocs, getFirestore, setDoc , deleteDoc} from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCDkt1cjZcdIgC0CW8Ysbdu5YWQuaIOYR8",
@@ -105,17 +105,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const querySnapshot = await getDocs(collection(db, 'enseignants'));
                 querySnapshot.forEach((doc) => {
                     const teacher = doc.data();
-                    console.log("Teacher:", teacher);
+                    const teacherId = doc.id; 
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${teacher.prenom_enseignant}</td>
-                        <td>${teacher.nom_enseignant}</td>
-                        <td>${teacher.departement}</td>
-                        <td>${teacher.email_enseignant}</td>
-                        <td><button class="remove-btn" data-teacher-id="${teacher.id}">Remove</button></td>
+                      <td>${teacher.prenom_enseignant}</td>
+                      <td>${teacher.nom_enseignant}</td>
+                      <td>${teacher.departement}</td>
+                      <td>${teacher.email_enseignant}</td>
+                      <td><button class="remove-btn" data-teacher-id="${teacherId}">Remove</button></td>
                     `;
                     teacherTable.appendChild(row);
+                    row.querySelector('.remove-btn').addEventListener('click', (event) => {
+                        const teacherId = event.target.getAttribute('data-teacher-id');
+                        removeTeacher(teacherId);
+                      });
                 });
             } catch (error) {
                 console.error("Error fetching teachers:", error);
@@ -125,7 +129,18 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchTeachers();
     }
 });
+async function removeTeacher(teacherId) {
+    try {
+      const teacherDocRef = doc(db, 'enseignants', teacherId);
+      await deleteDoc(teacherDocRef);
+      console.log(`Teacher with ID ${teacherId} has been removed.`);
+      document.querySelector(`button[data-teacher-id="${teacherId}"]`).closest('tr').remove();
+    } catch (error) {
+      console.error('Error removing teacher: ', error);
+    }
+  }
 
+  
 document.addEventListener('DOMContentLoaded', () => {
     const studentTable = document.querySelector('#studentTable tbody');
 
@@ -135,17 +150,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const querySnapshot = await getDocs(collection(db, 'étudiants'));
                 querySnapshot.forEach((doc) => {
                     const student = doc.data();
-                    console.log("Student:", student);
-
+                    const studentId = doc.id; 
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${student.prenom_etudiant}</td>
                         <td>${student.nom_etudiant}</td>
                         <td>${student.mat_etudiant}</td>
                         <td>${student.email_etudiant}</td>
-                        <td><button class="remove-btn" data-student-id="${student.id}">Remove</button></td>
+                        <td><button class="remove-btn" data-student-id="${studentId}">Remove</button></td>
                     `;
                     studentTable.appendChild(row);
+                    row.querySelector('.remove-btn').addEventListener('click', (event) => {
+                        const studentId = event.target.getAttribute('data-student-id');
+                        removeStudent(studentId);
+                      });
                 });
             } catch (error) {
                 console.error("Error fetching students:", error);
@@ -155,4 +173,13 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchStudents();
     }
 });
-
+async function removeStudent(studentId) {
+    try {
+      const studentDocRef = doc(db, 'étudiants', studentId);
+      await deleteDoc(studentDocRef);
+      console.log(`student with ID ${studentId} has been removed.`);
+      document.querySelector(`button[data-student-id="${studentId}"]`).closest('tr').remove();
+    } catch (error) {
+      console.error('Error removing student: ', error);
+    }
+  }
