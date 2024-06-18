@@ -43,7 +43,6 @@ async function addNotificationAdmin() {
 
     try {
         await setDoc(doc(colRefNot, notificationData.id), notificationData, { merge: false });
-        console.log("notification added to Firestore");
         
         form.reset();
     } catch (error) {
@@ -75,7 +74,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 const querySnapshot = await getDocs(collection(db, 'notifications'));
                 querySnapshot.forEach((doc) => {
                     const notifications = doc.data();
-                    console.log("Notifications:", notifications);
                     if(notifications.from === 'admin'){
                     const newNotification = document.createElement("div");
                     newNotification.className = "notification";
@@ -100,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 const querySnapshot = await getDocs(collection(db, 'notifications'));
                 querySnapshot.forEach((doc) => {
                     const notifications = doc.data();
-                    console.log("Notifications:", notifications);
                     if(notifications.from !== 'admin' && (notifications.recipient ==='both' || notifications.recipient ==='admin')){
                     const notification = document.createElement("div");
                     notification.className = "notification";
@@ -134,7 +131,6 @@ async function addNotificationTeacher() {
 
     try {
         await setDoc(doc(colRefNot, notificationData.id), notificationData, { merge: false });
-        console.log("notification added to Firestore");
         
         form.reset();
     } catch (error) {
@@ -166,7 +162,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 const querySnapshot = await getDocs(collection(db, 'notifications'));
                 querySnapshot.forEach((doc) => {
                     const notifications = doc.data();
-                    console.log("Notifications:", notifications);
                     if(notifications.from === 'teacher'){
                     const newNotification = document.createElement("div");
                     newNotification.className = "notification";
@@ -191,7 +186,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 const querySnapshot = await getDocs(collection(db, 'notifications'));
                 querySnapshot.forEach((doc) => {
                     const notifications = doc.data();
-                    console.log("Notifications:", notifications);
                     if(notifications.from !== 'teacher' && (notifications.recipient ==='both' || notifications.recipient ==='teachers')){
                     const notification = document.createElement("div");
                     notification.className = "notification";

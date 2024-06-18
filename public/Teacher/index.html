@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher profile</title>
+<title>Teacher Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/Attendance.css">
     <link rel="stylesheet" href="../css/side-panel.css">
@@ -13,35 +13,35 @@
 <body>
     <div class="card">
         <div class="side-panel">
-            <h2>Teacher UMBB</h2>
-            <ul role="tablist" class="nav flex-column nav-tabs">
+        <h2>Teacher UMBB</h2>
+            <ul role="tablist" class="nav flex-column nav-tabs" id="myTab">
                 <li class="d-none">
-                    <a href="#profile" data-bs-toggle="tab" class="nav-link has-icon active">Profile</a>
+                    <a href="#profile" id="profile-tab" data-bs-toggle="tab" class="nav-link active">Profile</a>
                 </li>
                 <li>
-                    <a href="#Timetable" data-bs-toggle="tab" class="nav-link has-icon">Timetable</a>
+                    <a href="#Timetable" id="Timetable-tab" data-bs-toggle="tab" class="nav-link">Timetable</a>
                 </li>
                 <li>
-                    <a href="#attendance" data-bs-toggle="tab" class="nav-link has-icon">Attendance</a>
+                    <a href="#attendance" id="attendance-tab" data-bs-toggle="tab" class="nav-link">Attendance</a>
                 </li>
                 <li>
-                    <a href="#send-notification" data-bs-toggle="tab" class="nav-link has-icon">Send Notification</a>
+                    <a href="#send-notification" id="send-notification-tab" data-bs-toggle="tab" class="nav-link">Send Notification</a>
                 </li>
                 <li>
-                    <a href="#receive-notification" data-bs-toggle="tab" class="nav-link has-icon">Receive Notification</a>
+                    <a href="#receive-notification" id="receive-notification-tab" data-bs-toggle="tab" class="nav-link">Receive Notification</a>
                 </li>
                 <li>
-                    <a href="../teacher.html" class="nav-link has-icon">Logout</a>
+                    <a href="#" id="logout-link" class="nav-link">Logout</a>
                 </li>
             </ul>
         </div>
         <div class="content">
             <div class="card-body tab-content">
-                <div class="tab-pane fade show active" id="profile">
+                <div class="tab-pane fade show active" id="profile" role="tabpanel">
                     <h1>Profile</h1>
                     <hr>
                 </div>
-                <div class="tab-pane fade" id="Timetable">
+                <div class="tab-pane fade" id="Timetable" role="tabpanel">
                     <h1>Timetable</h1>
                     <hr>
                     <div class="content">
@@ -90,15 +90,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="attendance">
+                <div class="tab-pane fade" id="attendance" role="tabpanel">
                     <h1>Attendance</h1>
                     <hr>
                     <main class="content">
                         <section class="group-selection">
                             <h2>Select a Group</h2>
                             <div class="group-buttons">
-                                <button class="btn" onclick="showGroupData('group1')">Group 1</button>
-                                <button class="btn" onclick="showGroupData('group2')">Group 2</button>
                             </div>
                         </section>
                 
@@ -140,7 +138,7 @@
                         </section>
                     </main>
                 </div>
-                <div class="tab-pane fade" id="send-notification">
+                <div class="tab-pane fade" id="send-notification" role="tabpanel">
                     <h1>Send Notification</h1>
                     <hr>
                     <div class="content">
@@ -168,7 +166,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="receive-notification">
+                <div class="tab-pane fade" id="receive-notification" role="tabpanel">
                     <h1>Teacher Notifications</h1>
                     <hr>
                     <div class="content">
@@ -184,9 +182,37 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 
+    <script>
+         $(document).ready(function () {
+            var activeTab = sessionStorage.getItem('activeTab');
+            if (activeTab) {
+                var tab = new bootstrap.Tab(document.querySelector('a[href="' + activeTab + '"]'));
+                tab.show();
+            } else {
+                var firstTab = new bootstrap.Tab(document.querySelector('#myTab a:first-child'));
+                firstTab.show();
+            }
+
+            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var href = $(e.target).attr('href');
+                sessionStorage.setItem('activeTab', href);
+            });
+
+            $('#logout-link').on('click', function (e) {
+                e.preventDefault(); 
+                sessionStorage.removeItem('activeTab');
+
+                window.location.href = '../teacher.html';
+            });
+        });
+    </script>
+    
     <script src="../js/sendnotification.js" type="module"></script>
-    <script src="../js/Attendance.js"></script>
+    <script src="../js/Attendance.js" type="module"></script>
     <script src="../js/printGroupData.js"></script>
     <script src="../js/profEmp.js" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

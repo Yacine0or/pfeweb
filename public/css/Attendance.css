@@ -30,6 +30,7 @@ body {
     color: #fff;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-left:20px;
 }
 
 .btn:hover {
