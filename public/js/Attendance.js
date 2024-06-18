@@ -65,6 +65,46 @@ function populateStudentTable(studentInfoArray) {
     });
 }
 
+// Function to populate the absence table with "View PDF" and justification status
+function populateAbsenceTable(absenceData) {
+    const absenceTableBody = document.getElementById("absence-body");
+
+    // Clear existing content
+    absenceTableBody.innerHTML = '';
+
+    // Populate the absence table with justification button and radio buttons
+    absenceData.forEach(student => {
+        const row = document.createElement("tr");
+
+        const justificationStatusColor = 
+            student.justificationStatus === "accepted" ? "green" :
+            student.justificationStatus === "rejected" ? "red" :
+            "black"; // Default color for empty status
+
+        row.innerHTML = `
+            <td>${student.prenom_etudiant}</td>
+            <td>${student.nom_etudiant}</td>
+            <td>${student.mat_etudiant}</td>
+            <td><button class="btn" onclick="viewJustification('${student.justificationPdf}')">View PDF</button></td>
+            <td style="color: ${justificationStatusColor};">
+                <input type="radio" name="justification-${student.mat_etudiant}" value="accepted"> Accepted
+                <input type="radio" name="justification-${student.mat_etudiant}" value="rejected"> Rejected
+            </td>
+        `;
+
+        // Attach event listeners to radio buttons
+        row.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                student.justificationStatus = radio.value; // Update justification status
+                const color = radio.value === "accepted" ? "green" : "red";
+                row.querySelector('td:last-child').style.color = color;
+            });
+        });
+
+        absenceTableBody.appendChild(row);
+    });
+}
+
 // Function to fetch and show group data when a group button is clicked
 async function showGroupData(groupName) {
     try {
@@ -76,6 +116,7 @@ async function showGroupData(groupName) {
         console.log('Student information:', studentInfoArray);
 
         populateStudentTable(studentInfoArray);
+        populateAbsenceTable(studentInfoArray);
     } catch (error) {
         console.error('Error retrieving group data:', error);
     }
