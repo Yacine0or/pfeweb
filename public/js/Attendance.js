@@ -31,6 +31,33 @@ async function getSubCollection(groupId) {
         throw error;
     }
 }
+async function getAllStudentsInGroups(groupId) {
+    try {
+        const groupRef = doc(db, 'groups', groupId);
+        const grpCollectionRef = collection(groupRef, 'grp');
+        const grpQuerySnapshot = await getDocs(grpCollectionRef);
+
+        const studentInfoArray = grpQuerySnapshot.docs.map(doc => doc.id);
+        return studentInfoArray;
+    } catch (error) {
+        console.error('Error retrieving collection:', error);
+        throw error;
+    }
+}
+// Function to get students in groups but not in presences for a specific groupId
+async function getStudentsInGroupsNotInPresences(groupId) {
+    try {
+        const allStudentsInGroups = await getAllStudentsInGroups(groupId);
+        const allStudentsInPresences = await getSubCollection(groupId);
+        // Find students in groups but not in presences
+        const studentsNotInPresences = allStudentsInGroups.filter(groupId => !allStudentsInPresences.includes(groupId.toString()));
+
+        return studentsNotInPresences;
+    } catch (error) {
+        console.error('Error retrieving students not in presences:', error);
+        throw error;
+    }
+}
 
 // Function to get student information by ID
 async function getStudentInformation(studentId) {
@@ -109,18 +136,20 @@ function populateAbsenceTable(absenceData) {
 async function showGroupData(groupName) {
     try {
         const studentIds = await getSubCollection(groupName);
-        console.log('Students in sub-collection:', studentIds);
+        const studentIdsAbs = await getStudentsInGroupsNotInPresences(groupName);
 
         const studentPromises = studentIds.map(studentId => getStudentInformation(studentId));
         const studentInfoArray = await Promise.all(studentPromises);
-        console.log('Student information:', studentInfoArray);
+        const studentPromisesAbs = studentIdsAbs.map(studentId => getStudentInformation(studentId));
+        const studentAbsInfoArray = await Promise.all(studentPromisesAbs);
 
         populateStudentTable(studentInfoArray);
-        populateAbsenceTable(studentInfoArray);
+        populateAbsenceTable(studentAbsInfoArray);
     } catch (error) {
         console.error('Error retrieving group data:', error);
     }
 }
+
 
 // Event listener for group buttons to switch between groups
 document.addEventListener('DOMContentLoaded', async function() {
@@ -149,3 +178,4 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('Error getting documents:', error);
     }
 });
+
