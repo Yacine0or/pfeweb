@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-import { collection, doc, getDoc, getDocs, getFirestore } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+import { collection, doc, getDoc, getDocs, getFirestore, query, where } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCDkt1cjZcdIgC0CW8Ysbdu5YWQuaIOYR8",
@@ -17,44 +17,18 @@ const app = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
 
-// Function to get a sub-collection by document ID
-async function getSubCollection(groupId) {
+// Function to get students by attendance status
+async function getStudentsByAttendanceStatus(groupId, status) {
     try {
         const groupRef = doc(db, 'présences', groupId);
         const grpCollectionRef = collection(groupRef, 'grp');
-        const grpQuerySnapshot = await getDocs(grpCollectionRef);
+        const q = query(grpCollectionRef, where('etudiant_present', '==', status));
+        const grpQuerySnapshot = await getDocs(q);
 
         const studentInfoArray = grpQuerySnapshot.docs.map(doc => doc.id);
         return studentInfoArray;
     } catch (error) {
-        console.error('Error retrieving sub-collection:', error);
-        throw error;
-    }
-}
-async function getAllStudentsInGroups(groupId) {
-    try {
-        const groupRef = doc(db, 'groups', groupId);
-        const grpCollectionRef = collection(groupRef, 'grp');
-        const grpQuerySnapshot = await getDocs(grpCollectionRef);
-
-        const studentInfoArray = grpQuerySnapshot.docs.map(doc => doc.id);
-        return studentInfoArray;
-    } catch (error) {
-        console.error('Error retrieving collection:', error);
-        throw error;
-    }
-}
-// Function to get students in groups but not in presences for a specific groupId
-async function getStudentsInGroupsNotInPresences(groupId) {
-    try {
-        const allStudentsInGroups = await getAllStudentsInGroups(groupId);
-        const allStudentsInPresences = await getSubCollection(groupId);
-        // Find students in groups but not in presences
-        const studentsNotInPresences = allStudentsInGroups.filter(groupId => !allStudentsInPresences.includes(groupId.toString()));
-
-        return studentsNotInPresences;
-    } catch (error) {
-        console.error('Error retrieving students not in presences:', error);
+        console.error('Error retrieving sub-collection by attendance status:', error);
         throw error;
     }
 }
@@ -96,18 +70,14 @@ function populateStudentTable(studentInfoArray) {
 function populateAbsenceTable(absenceData) {
     const absenceTableBody = document.getElementById("absence-body");
 
-    // Clear existing content
     absenceTableBody.innerHTML = '';
-
-    // Populate the absence table with justification button and radio buttons
     absenceData.forEach(student => {
         const row = document.createElement("tr");
 
         const justificationStatusColor = 
             student.justificationStatus === "accepted" ? "green" :
             student.justificationStatus === "rejected" ? "red" :
-            "black"; // Default color for empty status
-
+            "black";
         row.innerHTML = `
             <td>${student.prenom_etudiant}</td>
             <td>${student.nom_etudiant}</td>
@@ -122,7 +92,7 @@ function populateAbsenceTable(absenceData) {
         // Attach event listeners to radio buttons
         row.querySelectorAll('input[type="radio"]').forEach(radio => {
             radio.addEventListener('change', () => {
-                student.justificationStatus = radio.value; // Update justification status
+                student.justificationStatus = radio.value;
                 const color = radio.value === "accepted" ? "green" : "red";
                 row.querySelector('td:last-child').style.color = color;
             });
@@ -135,21 +105,21 @@ function populateAbsenceTable(absenceData) {
 // Function to fetch and show group data when a group button is clicked
 async function showGroupData(groupName) {
     try {
-        const studentIds = await getSubCollection(groupName);
-        const studentIdsAbs = await getStudentsInGroupsNotInPresences(groupName);
+        const presentStudentIds = await getStudentsByAttendanceStatus(groupName, true); 
+        const absentStudentIds = await getStudentsByAttendanceStatus(groupName, false); 
 
-        const studentPromises = studentIds.map(studentId => getStudentInformation(studentId));
-        const studentInfoArray = await Promise.all(studentPromises);
-        const studentPromisesAbs = studentIdsAbs.map(studentId => getStudentInformation(studentId));
-        const studentAbsInfoArray = await Promise.all(studentPromisesAbs);
+        const presentStudentPromises = presentStudentIds.map(studentId => getStudentInformation(studentId));
+        const presentStudentInfoArray = await Promise.all(presentStudentPromises);
+        
+        const absentStudentPromises = absentStudentIds.map(studentId => getStudentInformation(studentId));
+        const absentStudentInfoArray = await Promise.all(absentStudentPromises);
 
-        populateStudentTable(studentInfoArray);
-        populateAbsenceTable(studentAbsInfoArray);
+        populateStudentTable(presentStudentInfoArray);
+        populateAbsenceTable(absentStudentInfoArray);
     } catch (error) {
         console.error('Error retrieving group data:', error);
     }
 }
-
 
 // Event listener for group buttons to switch between groups
 document.addEventListener('DOMContentLoaded', async function() {
@@ -178,4 +148,3 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('Error getting documents:', error);
     }
 });
-
