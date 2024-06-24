@@ -17,35 +17,32 @@ const app = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
 
-// Function to get students by attendance status
-async function getStudentsByAttendanceStatus(groupId, status) {
+// Function to get students by presence status
+async function getStudentsByPresenceStatus(status) {
     try {
-        const groupRef = doc(db, 'présences', groupId);
-        const grpCollectionRef = collection(groupRef, 'grp');
-        const q = query(grpCollectionRef, where('etudiant_present', '==', status));
-        const grpQuerySnapshot = await getDocs(q);
+        const studentsRef = collection(db, 'étudiants');
+        const q = query(studentsRef, where('presence', '==', status));
+        const studentsQuerySnapshot = await getDocs(q);
 
-        const studentInfoArray = grpQuerySnapshot.docs.map(doc => doc.id);
-        return studentInfoArray;
+        return studentsQuerySnapshot.docs.map(doc => {
+            return { id: doc.id, ...doc.data() };
+        });
     } catch (error) {
-        console.error('Error retrieving sub-collection by attendance status:', error);
+        console.error('Error retrieving students by presence status:', error);
         throw error;
     }
 }
 
-// Function to get student information by ID
-async function getStudentInformation(studentId) {
+// Function to check if student is in the specified group
+async function isStudentInGroup(groupName, studentMatricule) {
     try {
-        const studentRef = doc(db, 'étudiants', studentId);
-        const studentDoc = await getDoc(studentRef);
+        const groupRef = doc(db, 'groups', groupName);
+        const studentDocRef = doc(collection(groupRef, 'grp'), studentMatricule);
+        const studentDoc = await getDoc(studentDocRef);
 
-        if (!studentDoc.exists()) {
-            throw new Error(`Student with ID ${studentId} does not exist.`);
-        }
-
-        return studentDoc.data();
+        return studentDoc.exists();
     } catch (error) {
-        console.error('Error retrieving student information:', error);
+        console.error('Error checking student group membership:', error);
         throw error;
     }
 }
@@ -69,11 +66,10 @@ function populateStudentTable(studentInfoArray) {
 // Function to populate the absence table with "View PDF" and justification status
 function populateAbsenceTable(absenceData) {
     const absenceTableBody = document.getElementById("absence-body");
-
     absenceTableBody.innerHTML = '';
+
     absenceData.forEach(student => {
         const row = document.createElement("tr");
-
         const justificationStatusColor = 
             student.justificationStatus === "accepted" ? "green" :
             student.justificationStatus === "rejected" ? "red" :
@@ -105,21 +101,31 @@ function populateAbsenceTable(absenceData) {
 // Function to fetch and show group data when a group button is clicked
 async function showGroupData(groupName) {
     try {
-        const presentStudentIds = await getStudentsByAttendanceStatus(groupName, true); 
-        const absentStudentIds = await getStudentsByAttendanceStatus(groupName, false); 
+        // Get students with presence true and false
+        const presentStudents = await getStudentsByPresenceStatus(true);
+        const absentStudents = await getStudentsByPresenceStatus(false);
 
-        const presentStudentPromises = presentStudentIds.map(studentId => getStudentInformation(studentId));
-        const presentStudentInfoArray = await Promise.all(presentStudentPromises);
-        
-        const absentStudentPromises = absentStudentIds.map(studentId => getStudentInformation(studentId));
-        const absentStudentInfoArray = await Promise.all(absentStudentPromises);
+        // Filter students who belong to the specified group
+        const presentStudentPromises = presentStudents.map(async student => {
+            const isInGroup = await isStudentInGroup(groupName, student.mat_etudiant);
+            return isInGroup ? student : null;
+        });
+        const presentStudentInfoArray = (await Promise.all(presentStudentPromises)).filter(student => student !== null);
 
+        const absentStudentPromises = absentStudents.map(async student => {
+            const isInGroup = await isStudentInGroup(groupName, student.mat_etudiant);
+            return isInGroup ? student : null;
+        });
+        const absentStudentInfoArray = (await Promise.all(absentStudentPromises)).filter(student => student !== null);
+
+        // Populate the tables
         populateStudentTable(presentStudentInfoArray);
         populateAbsenceTable(absentStudentInfoArray);
     } catch (error) {
         console.error('Error retrieving group data:', error);
     }
 }
+
 
 // Event listener for group buttons to switch between groups
 document.addEventListener('DOMContentLoaded', async function() {
