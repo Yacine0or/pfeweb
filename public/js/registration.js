@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-import { collection, doc, getDocs, getFirestore, setDoc , deleteDoc} from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+import { collection, doc, getDocs, getDoc, getFirestore, setDoc , deleteDoc} from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCDkt1cjZcdIgC0CW8Ysbdu5YWQuaIOYR8",
@@ -33,24 +33,32 @@ async function addStudent() {
     const form = document.querySelector('#addStudent');
     const formData = new FormData(form);
 
+    // Create the studentData object without the group field
     const studentData = {
         id: generateRandomId(),
         prenom_etudiant: formData.get('first_name'),
         nom_etudiant: formData.get('last_name'),
         motdepasse_etudiant: formData.get('user_password'),
         email_etudiant: formData.get('email'),
-        mat_etudiant: formData.get('matricule'),
+        mat_etudiant: formData.get('matricule')
     };
 
     try {
+        // Add student to the main students collection
         await setDoc(doc(colRefEt, formData.get('matricule')), studentData, { merge: false });
-        console.log("student added to Firestore");
-        
+        console.log("Student added to Firestore");
+
+        // Add matricule to the specific group collection
+        const groupName = formData.get('groupe');
+        await setDoc(doc(collection(db, `groups/${groupName}/grp`), formData.get('matricule')), { matricule: formData.get('matricule') }, { merge: false });
+        console.log("Matricule added to group collection in Firestore");
+
         form.reset();
     } catch (error) {
         console.error("Error adding student to Firestore: ", error);
     }
 }
+
 
 
 
@@ -175,11 +183,39 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 async function removeStudent(studentId) {
     try {
-      const studentDocRef = doc(db, 'étudiants', studentId);
-      await deleteDoc(studentDocRef);
-      console.log(`student with ID ${studentId} has been removed.`);
-      document.querySelector(`button[data-student-id="${studentId}"]`).closest('tr').remove();
+        // Reference to the student document in the 'étudiants' collection
+        const studentDocRef = doc(db, 'étudiants', studentId);
+
+        // Find the group the student belongs to by searching through all group collections
+        const groupsSnapshot = await getDocs(collection(db, 'groups'));
+        let groupName = null;
+
+        for (const groupDoc of groupsSnapshot.docs) {
+            const groupSubColRef = collection(db, `groups/${groupDoc.id}/grp`);
+            const studentGroupDoc = await getDoc(doc(groupSubColRef, studentId));
+            if (studentGroupDoc.exists()) {
+                groupName = groupDoc.id;
+                break;
+            }
+        }
+
+        if (!groupName) {
+            console.error('Group for the student not found.');
+            return;
+        }
+
+        // Delete the student document from the 'étudiants' collection
+        await deleteDoc(studentDocRef);
+        console.log(`Student with ID ${studentId} has been removed from the 'étudiants' collection.`);
+
+        // Delete the student document from the relevant group collection
+        const groupDocRef = doc(db, `groups/${groupName}/grp`, studentId);
+        await deleteDoc(groupDocRef);
+        console.log(`Student with ID ${studentId} has been removed from the 'groups/${groupName}/grp' collection.`);
+
+        // Remove the corresponding row from the HTML table
+        document.querySelector(`button[data-student-id="${studentId}"]`).closest('tr').remove();
     } catch (error) {
-      console.error('Error removing student: ', error);
+        console.error('Error removing student: ', error);
     }
-  }
+}
