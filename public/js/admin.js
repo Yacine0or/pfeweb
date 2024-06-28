@@ -6,7 +6,7 @@ document.getElementById("loginForm").addEventListener("submit", function(event) 
     
     if (username === 'admin' && password === 'umbb') {
         // Redirect to Registration.html upon successful login
-        window.location.href = "Registration.html";
+        window.location.href = "../public/admin/index.html";
     } else {
         alert("Invalid username or password!");
     }

@@ -1,10 +1,29 @@
+
+
+var opt = document.getElementById("viewGroup")
+
+opt.onchange = function(){
+    displayScheduleForGroup()
+}
+
 const groupSchedules = {
     'Group A': [],
     'Group B': [],
     'Group C': []
 };
+function generateRandomId(length = 10) {
+    const characters = '0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += characters[Math.floor(Math.random() * characters.length)];
+    }
+    return result;
+}
 
-function addCourse() {
+
+async function addCourse(event) {
+    event.preventDefault()
+    
     const group = document.getElementById("group").value;
     const dayOfWeek = document.getElementById("dayOfWeek").value;
     const courseTime = document.getElementById("courseTime").value;
@@ -14,7 +33,7 @@ function addCourse() {
 
     if (!group || !dayOfWeek || !courseTime || !courseName || !courseType || !courseRoom) {
         alert("Please fill out all fields.");
-        return;
+       
     }
 
     const schedule = groupSchedules[group];
@@ -36,6 +55,11 @@ function addCourse() {
         type: courseType,
         room: courseRoom
     });
+
+    //win rahi f code te3 presence show
+
+
+
 
     // Reset form fields after adding a course
     document.getElementById("group").value = "";
