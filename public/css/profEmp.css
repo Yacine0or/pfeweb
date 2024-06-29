@@ -1,0 +1,177 @@
+body, h1, h2, h3, p, ul, ol, li {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0; /* Added to ensure no default margin on body */
+}
+
+/* Calendar container */
+.calendar {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Today label */
+.today {
+    font-weight: bold;
+    color: #8bc819;
+}
+
+/* Date display */
+.date {
+    font-size: 18px;
+    color: black;
+}
+
+/* Individual day buttons */
+.days {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.day {
+    width: 14.28%;
+    padding: 10px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #b8b6b5;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Highlight the current day */
+.selected {
+    background-color: #8bc819;
+    color: white;
+}
+
+/* Change color to green on click */
+.day.clicked {
+    background-color: #8bc819;
+    color: white;
+}
+
+/* Custom day format */
+.day span {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#courseForm {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+input[type="text"],
+select {
+    flex-basis: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.courseName {
+    width: 10%;
+}
+
+.courseBranch {
+    width: 5%;
+}
+
+.courseGroup {
+    width: 4%;
+}
+
+.courseRoom {
+    width: 6%;
+}
+
+.add-course-button {
+    background-color: #8bc819;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.add-course-button:hover {
+    background-color: #80b819;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #b8b6b5;
+}
+
+th {
+    background-color: #8bc819;
+    font-weight: bold;
+}
+
+
+.qr-container {
+width: 200px; /* Set container width */
+height: 200px; /* Set container height */
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: white;
+
+
+z-index: 9999;
+}
+
+.exit-button {
+display: block;
+margin-top: 10px;
+padding: 5px 10px;
+background-color: #8bc819;
+color: white;
+border: none;
+cursor: pointer;
+}
+.qr-code {
+border: none !important;
+}
+.generate-qr-button {
+background-color: #8bc819; /* Green */
+border: none;
+color: white;
+padding: 8px 16px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 14px;
+cursor: pointer;
+border-radius: 4px;
+}
+
+.generate-qr-button:hover {
+background-color: #80b819; /* Darker green */
+}

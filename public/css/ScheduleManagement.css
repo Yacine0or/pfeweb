@@ -1,0 +1,85 @@
+/* Reset default margins and padding */
+body, h1, h2, h3, p, ul, ol, li {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Container style */
+.container {
+    display: flex;
+}
+
+
+h2 {
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.form label {
+    font-weight: bold;
+}
+
+.form input,
+.form select,
+.form button {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form button {
+    background-color: #8bc819; /* Green */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.form button:hover {
+    background-color: #6a9618; /* Darker green on hover */
+}
+
+.schedule {
+    margin-top: 20px;
+}
+
+.schedule table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule th,
+.schedule td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.schedule th {
+    background-color: #8bc819;
+}
+
+.schedule button {
+    background-color: #f44336; /* Red */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.schedule button:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
+#addCourseButton{
+    width:20%;
+}
